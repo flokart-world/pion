@@ -114,6 +114,8 @@ if(MSVC)
 endif()
 # build target
 add_library(${PROJECT_NAME} ${SRC_FILES} ${HDR_FILES})
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME_DEBUG ${PROJECT_NAME}-debug)
 
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
@@ -140,6 +142,14 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
     )
 
+if (WIN32)
+    set (PION_CMAKE_DEST_DIR cmake)
+    set (PION_RELATIVE_PATH ..)
+else ()
+    set (PION_CMAKE_DEST_DIR lib/cmake/lib${PROJECT_NAME}-${PROJECT_VERSION})
+    set (PION_RELATIVE_PATH ../../..)
+endif ()
+
 include(CMakePackageConfigHelpers)
 configure_file(${CMAKE_SOURCE_DIR}/cmake/modules/lib${PROJECT_NAME}-config.cmake.in
     ${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}-config.cmake
@@ -153,4 +163,4 @@ write_basic_package_version_file(
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}-config.cmake
     ${CMAKE_CURRENT_BINARY_DIR}/lib${PROJECT_NAME}-config-version.cmake
-    DESTINATION lib/cmake/lib${PROJECT_NAME}-${PION_VERSION})
+    DESTINATION ${PION_CMAKE_DEST_DIR})
