@@ -127,6 +127,8 @@ void server::stop(bool wait_until_finished)
             // this terminates any other open connections
             std::for_each(m_conn_pool.begin(), m_conn_pool.end(),
                           boost::bind(&connection::close, _1));
+
+            m_conn_pool.clear();
         }
     
         // wait for all pending connections to complete
